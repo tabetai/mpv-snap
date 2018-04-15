@@ -12,7 +12,7 @@ apps:
   mpv:
     command: desktop-launch $SNAP/usr/bin/mpv
     plugs: [x11, wayland, opengl, unity7, pulseaudio, home, network, removable-media, optical-drive]
-    desktop: usr/local/share/applications/mpv.desktop
+    desktop: usr/share/applications/mpv.desktop
 
 parts:
   youtube-dl:
