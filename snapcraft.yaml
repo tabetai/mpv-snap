@@ -1,0 +1,248 @@
+name: mpv-tabetai
+version: '0.28.2'
+summary: a free, open source, and cross-platform media player.
+description: |
+  mpv is a media player based on MPlayer and mplayer2.
+  It supports a wide variety of video file formats,
+  audio and video codecs, and subtitle types.
+grade: stable
+confinement: strict
+
+apps:
+  mpv:
+    command: desktop-launch $SNAP/usr/bin/mpv
+    plugs: [x11, wayland, opengl, unity7, pulseaudio, home, network, removable-media, optical-drive]
+    desktop: usr/local/share/applications/mpv.desktop
+
+parts:
+  youtube-dl:
+    source: https://github.com/rg3/youtube-dl.git
+    plugin: python
+    python-version: python3
+    after: [ffmpeg]
+
+  mpv:
+    source: https://github.com/mpv-player/mpv/archive/v0.28.2.tar.gz
+    plugin: waf
+    configflags:
+      - --enable-cdda
+      - --enable-dvdnav
+      - --enable-dvdread
+      - --enable-encoding
+      - --enable-libmpv-shared
+      - --disable-static-build
+      - --enable-libsmbclient
+      - --enable-lua
+      - --disable-build-date
+    prepare: |
+      ./bootstrap.py
+    stage-packages:
+      - lua5.2
+      - libasound2
+      - libass5
+      - libatomic1
+      - libbluray1
+      - libc6
+      - libcdio-cdda1
+      - libcdio-paranoia1 
+      - libcdio13
+      - libdrm2
+      - libdvdnav4
+      - libdvdread4
+      - libegl1-mesa 
+      - libgbm1 
+      - libgl1-mesa-glx
+      - libjack-jackd2-0
+      - libjpeg8
+      - liblcms2-2
+      - liblua5.2-0
+      - libpulse0
+      - librubberband2v5
+      - libsdl2-2.0-0
+      - libsmbclient
+      - libsndio6.1
+      - libuchardet0
+      - libv4l-0
+      - libva-drm1 
+      - libva-wayland1
+      - libva-x11-1 
+      - libva1
+      - libvdpau1
+      - libwayland-client0 
+      - libwayland-cursor0
+      - libwayland-egl1-mesa 
+      - libx11-6
+      - libxext6
+      - libxinerama1
+      - libxkbcommon0
+      - libxrandr2
+      - libxss1
+      - libxv1
+      - zlib1g
+      - libsodium18
+    build-packages:  
+      - build-essential
+      - libasound2-dev
+      - libass-dev
+      - libbluray-dev
+      - libcdio-paranoia-dev
+      - libdvdnav-dev
+      - libdvdread-dev
+      - libegl1-mesa-dev
+      - libenca-dev
+      - libgbm-dev
+      - libgl1-mesa-dev
+      - libguess-dev
+      - libjack-dev
+      - libjpeg-dev
+      - liblcms2-dev
+      - liblua5.2-dev
+      - libpulse-dev
+      - librubberband-dev
+      - libsdl2-dev
+      - libssl-dev
+      - libsmbclient-dev
+      - libsndio-dev
+      - libswscale-dev
+      - libuchardet-dev
+      - libv4l-dev
+      - libva-dev
+      - libvdpau-dev
+      - libwayland-dev
+      - libx11-dev
+      - libxinerama-dev
+      - libxkbcommon-dev
+      - libxrandr-dev
+      - libxss-dev
+      - libxv-dev
+      - pkg-config
+      - python
+      - python-docutils
+    install: |
+      sed -i 's|Icon=mpv|Icon=${SNAP}/usr/local/share/icons/hicolor/64x64/apps/mpv.png|g' $SNAPCRAFT_PART_INSTALL/usr/local/share/applications/mpv.desktop
+    after:
+      - desktop-glib-only
+      - ffmpeg
+    organize:
+      usr/local: usr/
+    
+
+  ffmpeg:
+    source: https://git.ffmpeg.org/ffmpeg.git
+    plugin: autotools
+    configflags:
+      - --enable-gpl
+      - --enable-openssl
+      - --enable-nonfree
+      - --enable-avresample
+      - --enable-avisynth
+      - --enable-ladspa
+      - --enable-libass
+      - --enable-libbluray
+      - --enable-libbs2b
+      - --enable-libcaca
+      - --enable-libcdio
+      - --enable-libflite
+      - --enable-libfontconfig
+      - --enable-libfreetype
+      - --enable-libfribidi
+      - --enable-libgme
+      - --enable-libgsm
+      - --enable-libmp3lame
+      - --enable-libopenjpeg
+      - --enable-libopus
+      - --enable-libpulse
+      - --enable-librubberband
+      - --enable-libshine
+      - --enable-libsnappy
+      - --enable-libsoxr
+      - --enable-libspeex
+      - --enable-libssh
+      - --enable-libtheora
+      - --enable-libtwolame
+      - --enable-libvorbis
+      - --enable-libvpx
+      - --enable-libwavpack
+      - --enable-libwebp
+      - --enable-libx265
+      - --enable-libxvid
+      - --enable-libzmq
+      - --enable-libzvbi 
+      - --enable-omx
+      - --enable-openal
+      - --enable-opengl
+      - --enable-sdl2
+      - --enable-shared
+      - --disable-static
+    build-packages:
+      - git
+      - g++
+      - make
+      - autoconf
+      - libtool
+      - cmake
+      - automake
+      - build-essential
+      - openssl
+      - flite1-dev
+      - frei0r-plugins-dev
+      - ladspa-sdk
+      - libass-dev
+      - libbluray-dev
+      - libbs2b-dev
+      - libcaca-dev
+      - libcdio-paranoia-dev
+      - libchromaprint-dev
+      - libcrystalhd-dev
+      - libdc1394-22-dev
+      - libfontconfig1-dev
+      - libfreetype6-dev
+      - libfribidi-dev
+      - libgl1-mesa-dev
+      - libgme-dev
+      - libgsm1-dev
+      - libleptonica-dev
+      - liblzma-dev
+      - libmp3lame-dev
+      - libnetcdf-dev
+      - libopenal-dev
+      - libomxil-bellagio-dev
+      - libopencore-amrnb-dev
+      - libopencore-amrwb-dev
+      - libopencv-imgproc-dev
+      - libopenjp2-7-dev
+      - libopus-dev
+      - libpulse-dev
+      - librubberband-dev
+      - libsctp-dev
+      - libsdl2-dev
+      - libshine-dev
+      - libsnappy-dev
+      - libsoxr-dev
+      - libspeex-dev
+      - libssh-gcrypt-dev
+      - libtesseract-dev
+      - libtheora-dev
+      - libtwolame-dev
+      - libva-dev
+      - libvdpau-dev
+      - libvo-amrwbenc-dev
+      - libvorbis-dev
+      - libvpx-dev
+      - libwavpack-dev
+      - libwebp-dev
+      - libx264-dev
+      - libx265-dev
+      - libxcb-shape0-dev
+      - libxv-dev
+      - libxvidcore-dev
+      - libxvmc-dev
+      - libzmq3-dev
+      - libzvbi-dev
+      - pkg-config
+      - texinfo
+      - nasm
+      - zlib1g-dev
+    organize:
+      usr/local: usr/
+      
