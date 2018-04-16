@@ -241,4 +241,6 @@ parts:
       - texinfo
       - nasm
       - zlib1g-dev
+    organize:
+      - usr/local: usr/
       
